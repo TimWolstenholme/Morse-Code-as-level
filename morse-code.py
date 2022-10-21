@@ -149,9 +149,9 @@ def DisplayMenu():
 
 def GetMenuOption():
     MenuOption = EMPTYSTRING
-    while len(MenuOption) != 1:
-        MenuOption = input("Enter your choice: ")
-    return MenuOption
+    while len(MenuOption) != 1 and MenuOption.upper() !="R" and MenuOption.upper()!="S" and MenuOption.upper() "X":
+        MenuOption = input("Enter your choice (R/S/X": ")
+    return MenuOption.upper()
         
 def SendReceiveMessages():
     Dash = [20,23,0,0,24,1,0,17,0,21,0,25,0,15,11,0,0,0,0,22,13,0,0,10,0,0,0]
