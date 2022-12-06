@@ -1,11 +1,5 @@
-# Skeleton Program for the AQA AS Summer 2018 examinationTea
-# this code should be used in conjunction with the Preliminary Material
-# written by the AQA AS Programmer Team
-# developed in a Python 3 environment
 
-
-# Version Number : 1.6
-
+        
 SPACE = ' '
 EOL = '#'
 EMPTYSTRING = ''
@@ -34,14 +28,22 @@ def StripTrailingSpaces(Transmission):
     return Transmission    
 
 def GetTransmission():
-    FileName = input("Enter file name: ")
-    print(list(FileName).count('.'))
-    if (FileName.strip()[-4:] != '.txt' and '.'in list(FileName)) or list(FileName).count('.')>1:
-            ReportError("The file must be a txt")
-            Transmission=EMPTYSTRING
-            return Transmission
-    elif '.' not in list(FileName):
-        FileName+='.txt'
+    no_file=""
+    while no_file.lower()[0]!='y' and no_file.lower()[0]!='n':
+        no_file=input("Is there already a file with morse code,(y/n): ")
+    if no_file.lower()[0]=='y':
+
+        FileName = input("Enter file name: ")
+        print(list(FileName).count('.'))
+        if (FileName.strip()[-4:] != '.txt' and '.'in list(FileName)) or list(FileName).count('.')>1:
+                ReportError("The file must be a txt")
+                Transmission=EMPTYSTRING
+                return Transmission
+        elif '.' not in list(FileName):
+            FileName+='.txt'
+    else:
+        FileName=write_file()
+        
 
     try:
         FileHandle = open(FileName, 'r')
@@ -149,8 +151,8 @@ def DisplayMenu():
 
 def GetMenuOption():
     MenuOption = EMPTYSTRING
-    while len(MenuOption) != 1 and MenuOption.upper() !="R" and MenuOption.upper()!="S" and MenuOption.upper() "X":
-        MenuOption = input("Enter your choice (R/S/X": ")
+    while len(MenuOption) != 1 and MenuOption.upper() !="R" and MenuOption.upper()!="S" and MenuOption.upper()!= "X" :
+        MenuOption = input("Enter the option, either R,S,X")
     return MenuOption.upper()
         
 def SendReceiveMessages():
@@ -171,6 +173,12 @@ def SendReceiveMessages():
         elif MenuOption == 'X':
             ProgramEnd = True
         
+def write_file():
+    with open("tempfile.txt",'w') as f:
+        morse_code=input("Enter the morse code you want to be decoded")
+        f.write(morse_code)
+        return "tempfile.txt"
+    
 
 if __name__ == "__main__":
     SendReceiveMessages()
