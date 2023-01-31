@@ -1,4 +1,10 @@
+# Skeleton Program for the AQA AS Summer 2018 examinationTea
+# this code should be used in conjunction with the Preliminary Material
+# written by the AQA AS Programmer Team
+# developed in a Python 3 environment
 
+
+# Version Number : 1.6
         
 SPACE = ' '
 EOL = '#'
@@ -28,35 +34,48 @@ def StripTrailingSpaces(Transmission):
     return Transmission    
 
 def GetTransmission():
-    no_file=""
-    while no_file.lower()[0]!='y' and no_file.lower()[0]!='n':
-        no_file=input("Is there already a file with morse code,(y/n): ")
-    if no_file.lower()[0]=='y':
+  no_file="EMPTY"
+  while no_file.lower()[0]!='y' and no_file.lower()[0]!='n':
+    no_file=input("Do you already have a file with morse code in (y/n): ")
+  if no_file.lower()[0]!='y':
+    create_morse_file()
+    FileName='tempfile.txt'
+  else:
+    FileName = input("Enter file name: ")
+  try:
+    FileHandle = open(FileName, 'r+')
+    Transmission = FileHandle.readline()
+    FileHandle.close()
+    Transmission = StripLeadingSpaces(Transmission)
+    if len(Transmission) > 0:
+      Transmission = StripTrailingSpaces(Transmission)
+      Transmission = Transmission + EOL
+  except:
+    ReportError("No transmission found")
+    Transmission = EMPTYSTRING
+  return Transmission
 
-        FileName = input("Enter file name: ")
-        print(list(FileName).count('.'))
-        if (FileName.strip()[-4:] != '.txt' and '.'in list(FileName)) or list(FileName).count('.')>1:
-                ReportError("The file must be a txt")
-                Transmission=EMPTYSTRING
-                return Transmission
-        elif '.' not in list(FileName):
-            FileName+='.txt'
+def create_morse_file():
+  morse_code=input("What is the morse code you want to be translated (slashed between words): ")
+  
+  morse_code=list(morse_code)
+  for i,e in enumerate(morse_code):
+    if e=='/' and morse_code[i-1]==" ":
+      del morse_code[i-1]
+  for i,e in enumerate(morse_code):
+    if e=='-':
+      morse_code[i]="=== "
+    elif e=='.':
+      morse_code[i]="= "
+    elif e==" ":
+      morse_code[i]="  "
+    elif e=="/":
+      morse_code[i]="      "
     else:
-        FileName=write_file()
-        
+      return None
+  with open("tempfile.txt",'w') as f:
+    f.write("".join(letter for letter in morse_code))
 
-    try:
-        FileHandle = open(FileName, 'r')
-        Transmission = FileHandle.readline()
-        FileHandle.close()
-        Transmission = StripLeadingSpaces(Transmission)
-        if len(Transmission) > 0:
-            Transmission = StripTrailingSpaces(Transmission)
-            Transmission = Transmission + EOL
-    except:
-        ReportError("No transmission found")
-        Transmission = EMPTYSTRING
-    return Transmission
 
 def GetNextSymbol(i, Transmission):
     if Transmission[i] == EOL:
@@ -109,6 +128,7 @@ def Decode(CodedLetter, Dash, Letter, Dot):
         elif Symbol == '-':
             Pointer = Dash[Pointer]
         else:
+            
             Pointer = Dot[Pointer]
     return Letter[Pointer]
 
@@ -123,7 +143,6 @@ def ReceiveMorseCode(Dash, Letter, Dot):
         MorseCodeString = MorseCodeString + SPACE + CodedLetter
         PlainTextLetter = Decode(CodedLetter, Dash, Letter, Dot)
         PlainText = PlainText + PlainTextLetter
-    print(MorseCodeString)
     print(PlainText)
 
 def SendMorseCode(MorseCode):
@@ -152,7 +171,7 @@ def DisplayMenu():
 def GetMenuOption():
     MenuOption = EMPTYSTRING
     while len(MenuOption) != 1 and MenuOption.upper() !="R" and MenuOption.upper()!="S" and MenuOption.upper()!= "X" :
-        MenuOption = input("Enter the option, either R,S,X")
+        MenuOption = input("Enter the option, either R,S,X: ")
     return MenuOption.upper()
         
 def SendReceiveMessages():
@@ -172,13 +191,7 @@ def SendReceiveMessages():
             SendMorseCode(MorseCode) 
         elif MenuOption == 'X':
             ProgramEnd = True
-        
-def write_file():
-    with open("tempfile.txt",'w') as f:
-        morse_code=input("Enter the morse code you want to be decoded")
-        f.write(morse_code)
-        return "tempfile.txt"
-    
+
 
 if __name__ == "__main__":
     SendReceiveMessages()
